@@ -36,9 +36,20 @@ def pelora(x, y, u=None, noc=10, lambd=1/32, flip="pm", standardize=True, trace=
     ## check input
     if not isinstance(x, np.ndarray):
         raise TypeError("'x' must be a numeric matrix (e.g., gene expressions)")
-
     # rows of `x`
-    n = x.shape[0]
-    if not isinstance(y, np.ndarray) or len(y) != x.shape[0] or np.any(y == 0 or y == 1):
-        raise ValueError("'y' must be a numeric vector of length n = {} with only 0/1 entries".format(x.shape[0]))
-    
+    p = x.shape[0]
+    if not isinstance(y, np.ndarray) or len(y) != p or np.any(y == 0 | y == 1):
+        raise ValueError("'y' must be a numeric vector of length n = {} with only 0/1 entries".format(p))
+    # the y-values, aka "class labels"
+    yvals = np.array([0, 1])
+
+    #standardizing
+    if standardize:
+        means = np.mean(x)
+        standard_deviation = np.std(x)
+        if np.any(standard_deviation == 0):
+            raise ValueError("There are predictor variables with st. dev. = 0")
+        standardized_x = x - means / standard_deviation
+    else:
+        means = None
+        standard_deviation = None
