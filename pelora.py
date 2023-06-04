@@ -33,13 +33,16 @@ trace: Integer >= 0; when positive, the output of the internal loops is provided
 """
 
 def pelora(x, y, u=None, noc=10, lambd=1/32, flip="pm", standardize=True, trace=1):
+    # 1) Start with the entire p x n expression matrix X. Its rows are genes, and its columns are observations of two different tissue types, having zero mean and unit variance.
+
     ## check input
     if not isinstance(x, np.ndarray):
         raise TypeError("'x' must be a numeric matrix (e.g., gene expressions)")
     # rows of `x`
-    p = x.shape[0]
-    if not isinstance(y, np.ndarray) or len(y) != p or np.any(y == 0 | y == 1):
-        raise ValueError("'y' must be a numeric vector of length n = {} with only 0/1 entries".format(p))
+    p0 = x.shape[0]
+    p1 = x.shape[1]
+    if not isinstance(y, np.ndarray) or len(y) != p0 or np.any(y == 0 | y == 1):
+        raise ValueError("'y' must be a numeric vector of length n = {} with only 0/1 entries".format(p0))
     # the y-values, aka "class labels"
     yvals = np.array([0, 1])
 
