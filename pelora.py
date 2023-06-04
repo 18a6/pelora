@@ -34,10 +34,11 @@ trace: Integer >= 0; when positive, the output of the internal loops is provided
 
 def pelora(x, y, u=None, noc=10, lambd=1/32, flip="pm", standardize=True, trace=1):
     ## check input
-    if not isinstance(x, np.ndarray) or not np.issubdtype(x.dtype, np.number):
+    if not isinstance(x, np.ndarray):
         raise TypeError("'x' must be a numeric matrix (e.g., gene expressions)")
-    if not isinstance(y, np.ndarray) or not np.issubdtype(y.dtype, np.number) or len(y) != x.shape[0] or not np.all(np.logical_or(y == 0, y == 1)):
-        raise ValueError("'y' must be a numeric vector of length n = {} with only 0/1 entries".format(x.shape[0]))
 
     # rows of `x`
     n = x.shape[0]
+    if not isinstance(y, np.ndarray) or len(y) != x.shape[0] or np.any(y == 0 or y == 1):
+        raise ValueError("'y' must be a numeric vector of length n = {} with only 0/1 entries".format(x.shape[0]))
+    
